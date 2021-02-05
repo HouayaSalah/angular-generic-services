@@ -1,26 +1,30 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DaoService } from './dao.service';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export abstract class AbstractDaoService<T,ID> implements DaoService<T,ID> {
 
-  constructor() { }
+  constructor(
+    protected _http: HttpClient,
+    protected _base: string) { }
+
   save(t: T): Observable<T> {
-    throw new Error('Method not implemented.');
+   return this._http.post<T>(this._base, t);
   }
   update(id: ID, t: T): Observable<T> {
-    throw new Error('Method not implemented.');
+    return this._http.put<T>(this._base + "/" + id, t, {});
   }
   findOne(id: ID): Observable<T> {
-    throw new Error('Method not implemented.');
+    return this._http.get<T>(this._base + "/" + id);
   }
   findAll(): Observable<T[]> {
-    throw new Error('Method not implemented.');
+    return this._http.get<T[]>(this._base)
   }
   delete(id: ID): Observable<any> {
-    throw new Error('Method not implemented.');
+    return this._http.delete<T>(this._base + '/' + id);
   }
 }
